@@ -11,7 +11,7 @@ Module Program
         Console.Write("¬ведите основание системы счислени€, из которой нужно перевести число: ")
         osn = Console.ReadLine()
 
-        Console.Write("„исло: ")
+        Console.Write("Number: ")
         dv = Console.ReadLine()
 
         Dim array(Len(dv) - 1) As Integer
