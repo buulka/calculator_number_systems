@@ -1,33 +1,40 @@
 ' алькул€тор систем счислени€
 Module Program
     Sub Main()
-        'дл€ начала попробую написать перевод из любой в дес€тичную целого числа 
-        '(потом будет и дл€ дробного)
 
-        Dim dv As String
+        Dim num As String
         Dim sum As Integer
         Dim osn As Integer
-
-        Console.Write("¬ведите основание системы счислени€, из которой нужно перевести число: ")
+        Dim abc As String = "0123456789ABCDEFGHIJKLMNOPQRSTWVXYZ"
+        Dim osn2 As Integer
+        Console.Write("Enter the base of the number system from which you want to translate the number: ")
         osn = Console.ReadLine()
 
         Console.Write("Number: ")
-        dv = Console.ReadLine()
+        num = Console.ReadLine()
 
-        Dim array(Len(dv) - 1) As Integer
+        Console.Write("¬ какую:")
+        osn2 = Console.ReadLine()
 
-        For i = 0 To Len(dv) - 1
-            array(Len(dv) - 1 - i) = Val(dv(i))
+        Console.WriteLine("¬ дес€тичной: " & NumberToDecimal(num, osn, abc))
+
+
+        Console.ReadKey()
+    End Sub
+    Function NumberToDecimal(num As String, osn As Integer, abc As String) As Integer
+        Dim sum As Integer = 0
+        Dim array(Len(num) - 1) As Integer
+
+        For i = 0 To Len(num) - 1
+            array(Len(num) - 1 - i) = abc.IndexOf(num(i))
         Next
 
         For i = 0 To UBound(array)
             sum += Val(array(i)) * (osn ^ i)
         Next
 
-        Console.WriteLine("¬ дес€тичной: " & sum)
+        Return sum
+    End Function
 
-
-        Console.ReadKey()
-    End Sub
 End Module
 
