@@ -5,6 +5,7 @@ Module Program
         Dim num As String
         Dim osn As Integer
         Dim osn2 As Integer
+        Dim abc As String = "0123456789ABCDEFGHIJKLMNOPQRSTWVXYZ"
 
         Console.Write("Base of the original number system: ")
         osn = Console.ReadLine()
@@ -26,7 +27,25 @@ Module Program
 
         Return NumberFromDecimal(decimal_number, osn2, abc)
     End Function
-    Function NumberToDecimal(num As String, osn As Integer, abc As String) As Integer
+    Function NumberToDecimal(num As String, osn As Integer, abc As String) As Single
+        Dim dec As Single
+        Dim IntPart As Integer
+        Dim FractPart As Single
+
+
+        If num.IndexOf(",") <> -1 Then
+            Dim a() As String = Split(num, ",")
+            IntPart = IntPartToDecimal(a(0), osn, abc)
+            FractPart = FractParttoDecimal(a(1), osn, abc)
+            dec = IntPart + FractPart
+        Else
+            IntPart = IntPartToDecimal(num, osn, abc)
+            dec = IntPart
+        End If
+
+        Return dec
+    End Function
+    Function IntPartToDecimal(num As String, osn As Integer, abc As String) As Integer
         Dim sum As Integer = 0
         Dim array(Len(num) - 1) As Integer
 
@@ -40,7 +59,14 @@ Module Program
 
         Return sum
     End Function
+    Function FractParttoDecimal(num As String, osn As Integer, abc As String) As Single
+        Dim sum As Single
+        For i = 1 To Len(num)
+            sum += Convert.ToSingle(Str(abc.IndexOf(num(i - 1)))) * (osn ^ -i)
+        Next
 
+        Return sum
+    End Function
     Function NumberFromDecimal(decimal_number As Integer, osn2 As Integer, abc As String) As String
         Dim num2 As String = ""
 
