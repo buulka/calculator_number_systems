@@ -1,111 +1,111 @@
-
 Module Program
     Sub Main()
 
-        Dim num As String
-        Dim osn As Integer
-        Dim osn2 As Integer
+        Dim InputNumber As String
+        Dim InputBase As Integer
+        Dim OutputBase As Integer
 
         Console.Write("Base of the original number system: ")
-        osn = Console.ReadLine()
+        InputBase = Console.ReadLine()
 
         Console.Write("Base of the result number system: ")
-        osn2 = Console.ReadLine()
+        OutputBase = Console.ReadLine()
 
         Console.Write("Number: ")
-        num = Console.ReadLine()
+        InputNumber = Console.ReadLine()
+        Console.WriteLine()
 
-        Console.WriteLine("Result: " & Conversion(num, osn, osn2))
+        Console.WriteLine("Result: " & Conversion(InputNumber, InputBase, OutputBase))
 
         Console.ReadKey()
     End Sub
 
-    Function Conversion(num As String, osn As Integer, osn2 As Integer) As String
-        Dim abc As String = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-        Dim decimal_number = NumberToDecimal(num, osn, abc)
+    Function Conversion(InputNumber As String, InputBase As Integer, OutputBase As Integer) As String
+        Dim CharDict As String = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        Dim DecimalNumber = NumberToDecimal(InputNumber, InputBase, CharDict)
 
-        Return NumberFromDecimal(decimal_number, osn2, abc)
+        Return NumberFromDecimal(DecimalNumber, OutputBase, CharDict)
     End Function
-    Function NumberToDecimal(num As String, osn As Integer, abc As String) As Double
-        Dim dec As Double
-        Dim IntPart As Integer
-        Dim FractPart As Double
+    Function NumberToDecimal(InputNumber As String, InputBase As Integer, CharDict As String) As Double
+        Dim DecimalNumber As Double
+        Dim DecimalIntPart As Integer
+        Dim DecimalFractPart As Double
 
 
-        If num.IndexOf(",") <> -1 Then
-            Dim a() As String = Split(num, ",")
-            IntPart = IntPartToDecimal(a(0), osn, abc)
-            FractPart = FractParttoDecimal(a(1), osn, abc)
-            dec = IntPart + FractPart
+        If InputNumber.IndexOf(",") <> -1 Then
+            Dim a() As String = Split(InputNumber, ",")
+            DecimalIntPart = IntPartToDecimal(a(0), InputBase, CharDict)
+            DecimalFractPart = FractParttoDecimal(a(1), InputBase, CharDict)
+            DecimalNumber = DecimalIntPart + DecimalFractPart
         Else
-            IntPart = IntPartToDecimal(num, osn, abc)
-            dec = IntPart
+            DecimalIntPart = IntPartToDecimal(InputNumber, InputBase, CharDict)
+            DecimalNumber = DecimalIntPart
         End If
 
-        Return dec
+        Return DecimalNumber
     End Function
-    Function IntPartToDecimal(num As String, osn As Integer, abc As String) As Integer
-        Dim sum As Integer = 0
-        Dim array(Len(num) - 1) As Integer
+    Function IntPartToDecimal(InputNumber As String, InputBase As Integer, CharDict As String) As Integer
+        Dim DecimalIntPart As Integer = 0
+        Dim IntPartReverse(Len(InputNumber) - 1) As Integer
 
-        For i = 0 To Len(num) - 1
-            array(Len(num) - 1 - i) = abc.IndexOf(num(i))
+        For i = 0 To Len(InputNumber) - 1
+            IntPartReverse(Len(InputNumber) - 1 - i) = CharDict.IndexOf(InputNumber(i))
         Next
 
-        For i = 0 To UBound(array)
-            sum += Val(array(i)) * (osn ^ i)
+        For i = 0 To UBound(IntPartReverse)
+            DecimalIntPart += Val(IntPartReverse(i)) * (InputBase ^ i)
         Next
 
-        Return sum
+        Return DecimalIntPart
     End Function
-    Function FractParttoDecimal(num As String, osn As Integer, abc As String) As Double
-        Dim sum As Double
-        For i = 1 To Len(num)
-            sum += Convert.ToSingle(Str(abc.IndexOf(num(i - 1)))) * (osn ^ -i)
+    Function FractParttoDecimal(InputNumber As String, InputBase As Integer, CharDict As String) As Double
+        Dim DecimalFractPart As Double
+        For i = 1 To Len(InputNumber)
+            DecimalFractPart += Convert.ToSingle(Str(CharDict.IndexOf(InputNumber(i - 1)))) * (InputBase ^ -i)
         Next
 
-        Return sum
+        Return DecimalFractPart
     End Function
-    Function NumberFromDecimal(decimal_number As Double, osn2 As Integer, abc As String) As String
-        Dim final As String
-        Dim IntP As String
-        Dim FractP As String
+    Function NumberFromDecimal(DecimalNumber As Double, OutputBase As Integer, CharDict As String) As String
+        Dim OutputNumber As String
+        Dim OtputIntPart As String
+        Dim OutputFractPart As String
 
-        If decimal_number - Fix(decimal_number) > 0 Then
-            Dim temp As Single = decimal_number - Fix(decimal_number)
-            IntP = IntPartFromDecimal(Fix(decimal_number), osn2, abc)
-            FractP = FractPartFromDecimal(temp, osn2, abc)
-            final = IntP + "," + FractP
+        If DecimalNumber - Fix(DecimalNumber) > 0 Then
+            Dim temp As Single = DecimalNumber - Fix(DecimalNumber)
+            OtputIntPart = IntPartFromDecimal(Fix(DecimalNumber), OutputBase, CharDict)
+            OutputFractPart = FractPartFromDecimal(temp, OutputBase, CharDict)
+            OutputNumber = OtputIntPart + "," + OutputFractPart
         Else
-            final = IntPartFromDecimal(Fix(decimal_number), osn2, abc)
+            OutputNumber = IntPartFromDecimal(Fix(DecimalNumber), OutputBase, CharDict)
         End If
 
 
-        Return final
+        Return OutputNumber
     End Function
-    Function IntPartFromDecimal(decimal_number As Integer, osn2 As Integer, abc As String) As String
-        Dim num2 As String = ""
+    Function IntPartFromDecimal(IntPartOfDecimal As Integer, OutputBase As Integer, CharDict As String) As String
+        Dim OutputIntPart As String = ""
 
         Do
-            num2 += abc(decimal_number Mod osn2)
-            decimal_number \= osn2
-        Loop Until osn2 > decimal_number
-        num2 += abc(decimal_number)
+            OutputIntPart += CharDict(IntPartOfDecimal Mod OutputBase)
+            IntPartOfDecimal \= OutputBase
+        Loop Until OutputBase > IntPartOfDecimal
+        OutputIntPart += CharDict(IntPartOfDecimal)
 
-        Return StrReverse(num2)
+        Return StrReverse(OutputIntPart)
     End Function
 
-    Function FractPartFromDecimal(decimal_number As Double, osn2 As Integer, abc As String) As String
-        Dim number As String = ""
-        Dim temp As Double = decimal_number
+    Function FractPartFromDecimal(FractPartOfDecimal As Double, OutputBase As Integer, CharDict As String) As String
+        Dim OutputfractPart As String = ""
+        Dim TempVar As Double = FractPartOfDecimal
 
         For i = 1 To 5
-            temp *= osn2
-            number += abc(Fix(temp))
-            temp -= Fix(temp)
+            TempVar *= OutputBase
+            OutputfractPart += CharDict(Fix(TempVar))
+            TempVar -= Fix(TempVar)
         Next
 
-        Return number
+        Return OutputfractPart
     End Function
 End Module
 
