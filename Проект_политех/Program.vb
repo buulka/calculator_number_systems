@@ -1,11 +1,10 @@
-'Калькулятор систем счисления
+
 Module Program
     Sub Main()
 
         Dim num As String
         Dim osn As Integer
         Dim osn2 As Integer
-        Dim abc As String = "0123456789ABCDEFGHIJKLMNOPQRSTWVXYZ"
 
         Console.Write("Base of the original number system: ")
         osn = Console.ReadLine()
@@ -22,15 +21,15 @@ Module Program
     End Sub
 
     Function Conversion(num As String, osn As Integer, osn2 As Integer) As String
-        Dim abc As String = "0123456789ABCDEFGHIJKLMNOPQRSTWVXYZ"
+        Dim abc As String = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
         Dim decimal_number = NumberToDecimal(num, osn, abc)
 
         Return NumberFromDecimal(decimal_number, osn2, abc)
     End Function
-    Function NumberToDecimal(num As String, osn As Integer, abc As String) As Single
-        Dim dec As Single
+    Function NumberToDecimal(num As String, osn As Integer, abc As String) As Double
+        Dim dec As Double
         Dim IntPart As Integer
-        Dim FractPart As Single
+        Dim FractPart As Double
 
 
         If num.IndexOf(",") <> -1 Then
@@ -59,15 +58,32 @@ Module Program
 
         Return sum
     End Function
-    Function FractParttoDecimal(num As String, osn As Integer, abc As String) As Single
-        Dim sum As Single
+    Function FractParttoDecimal(num As String, osn As Integer, abc As String) As Double
+        Dim sum As Double
         For i = 1 To Len(num)
             sum += Convert.ToSingle(Str(abc.IndexOf(num(i - 1)))) * (osn ^ -i)
         Next
 
         Return sum
     End Function
-    Function NumberFromDecimal(decimal_number As Integer, osn2 As Integer, abc As String) As String
+    Function NumberFromDecimal(decimal_number As Double, osn2 As Integer, abc As String) As String
+        Dim final As String
+        Dim IntP As String
+        Dim FractP As String
+
+        If decimal_number - Fix(decimal_number) > 0 Then
+            Dim temp As Single = decimal_number - Fix(decimal_number)
+            IntP = IntPartFromDecimal(Fix(decimal_number), osn2, abc)
+            FractP = FractPartFromDecimal(temp, osn2, abc)
+            final = IntP + "," + FractP
+        Else
+            final = IntPartFromDecimal(Fix(decimal_number), osn2, abc)
+        End If
+
+
+        Return final
+    End Function
+    Function IntPartFromDecimal(decimal_number As Integer, osn2 As Integer, abc As String) As String
         Dim num2 As String = ""
 
         Do
@@ -77,6 +93,19 @@ Module Program
         num2 += abc(decimal_number)
 
         Return StrReverse(num2)
+    End Function
+
+    Function FractPartFromDecimal(decimal_number As Double, osn2 As Integer, abc As String) As String
+        Dim number As String = ""
+        Dim temp As Double = decimal_number
+
+        For i = 1 To 5
+            temp *= osn2
+            number += abc(Fix(temp))
+            temp -= Fix(temp)
+        Next
+
+        Return number
     End Function
 End Module
 
