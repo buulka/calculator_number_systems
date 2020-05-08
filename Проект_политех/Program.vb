@@ -1,20 +1,79 @@
 Module Program
-    Sub Main()
+    Sub pause(ByVal z As Double)
+        'Задержка на заданное время
+        Dim t As Single
+        t = Timer()
+        Do Until Timer() - t > z
+        Loop
+    End Sub
 
+    Sub screensaver()
+        'Вывод заставки случайным порядком цветов
+        Dim name() As String = {"  ######################################################################################## ",
+                                "                                                                                           ",
+                                "  #######   ##   ##   ##    ##  #######     ##     #######  ########    ######    ######   ",
+                                "  ##        ##   ##   ##   ###  ##         #  #    ##   ##     ##       #    #    ##   ##  ",
+                                "  ##        ##   ##   ##  ####  ##        ##  ##   #3   ##     ##      ##    ##   ##    #  ",
+                                "  ##        ##   ##   ##  # ##  ##        #    #   ##   ##     ##      ##    ##   ##   ##  ",
+                                "  ##        #######   ## ## ##  ##       ##    ##  #######     ##      #      #   ######   ",
+                                "  ##             ##   ## #  ##  ##       ##    ##     ####     ##      ##    ##   ##       ",
+                                "  ##             ##   ####  ##  ##       ##    ##    ## ##     ##      ##    ##   ##       ",
+                                "  ##             ##   ###   ##  ##       ##    ##   ##  ##     ##       #    #    ##       ",
+                                "  #######        ##   ##    ##  #######  ##    ##  ##   ##     ##       ######    ##       ",
+                                "                                                                                           ",
+                                "  ######################################################################################## "}
+        Dim colours() = {ConsoleColor.Green, ConsoleColor.White, ConsoleColor.DarkGreen, ConsoleColor.Cyan}
+        Console.BackgroundColor = ConsoleColor.DarkBlue
+        Console.Clear()
+        Randomize()
+        For i = 1 To 7
+            Console.WriteLine()
+        Next
+        For i = 0 To UBound(name)
+            For j = 0 To Len(name(i)) - 1
+                If name(i)(j) = "#" Then
+                    Console.BackgroundColor = colours(Int(3) * Rnd())
+                Else
+                    Console.BackgroundColor = ConsoleColor.DarkBlue
+                End If
+                Console.Write(" ")
+                pause(0.002)
+            Next
+            pause(0.001)
+            Console.WriteLine()
+        Next
+        Console.WriteLine()
+        Console.ForegroundColor = ConsoleColor.DarkGray
+        Console.BackgroundColor = ConsoleColor.DarkBlue
+        Console.ForegroundColor = ConsoleColor.White
+        Console.WriteLine()
+        Console.WriteLine()
+        Console.WriteLine("Нажмите любую клавишу для продолжения")
+        Console.ReadKey()
+    End Sub
+
+    Sub Main()
+        Console.SetWindowSize(95, 40)
+        Console.SetBufferSize(95, 40)
+        Console.BackgroundColor = ConsoleColor.DarkBlue
+        Console.ForegroundColor = ConsoleColor.White
+        screensaver()
+        Console.Clear()
         Dim InputNumber As String
-        Dim InputBase As Integer
-        Dim OutputBase As Integer
+        Dim InputBase As Single
+        Dim OutputBase As Single
 
         Do
             Try
                 Console.Write("Base of the original number system: ")
                 InputBase = Console.ReadLine()
             Catch InvalidCastException As Exception
-                Console.WriteLine("Input base should be an integer number")
             End Try
 
             If SystemValidation(InputBase) = False Then
-                Console.WriteLine("Number system is incorrect! Choose Number system from 2 to 36")
+                Console.WriteLine()
+                Console.WriteLine("Input base should be an integer number")
+                Console.WriteLine("Choose Number system from 2 to 36, Input base should be an integer number!")
                 Console.WriteLine()
             End If
 
@@ -30,7 +89,7 @@ Module Program
 
 
             If SystemValidation(OutputBase) = False Then
-                Console.WriteLine("Number system is incorrect! Choose Number system from 2 to 36")
+                Console.WriteLine("Number system is incorrect! Input base should be an integer number! Choose Number system from 2 to 36")
             End If
             Console.WriteLine()
         Loop Until SystemValidation(OutputBase) = True
@@ -45,13 +104,14 @@ Module Program
             End If
         Loop Until NumberValidation(InputNumber, InputBase) = True
 
+        Convert.ToInt32(InputBase)
+        Convert.ToInt32(OutputBase)
         Console.WriteLine("Result: " & Conversion(InputNumber, InputBase, OutputBase))
 
         Console.ReadKey()
     End Sub
-    Function SystemValidation(Base As Integer) As Boolean
-
-        If Base < 2 Or Base > 36 Then
+    Function SystemValidation(Base As Single) As Boolean
+        If Base < 2 Or Base > 36 Or (Base - Fix(Base) > 0) Then
             Return False
         End If
         Return True
