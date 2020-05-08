@@ -5,14 +5,37 @@ Module Program
         Dim InputBase As Integer
         Dim OutputBase As Integer
 
+        Do
+            Try
+                Console.Write("Base of the original number system: ")
+                InputBase = Console.ReadLine()
+            Catch InvalidCastException As Exception
+                Console.WriteLine("Input base should be an integer number")
+            End Try
+
+            If SystemValidation(InputBase) = False Then
+                Console.WriteLine("Number system is incorrect! Choose Number system from 2 to 36")
+                Console.WriteLine()
+            End If
+
+        Loop Until SystemValidation(InputBase) = True
 
         Do
-            Console.Write("Base of the original number system: ")
-            InputBase = Console.ReadLine()
+            Try
+                Console.Write("Base of the result number system: ")
+                OutputBase = Console.ReadLine()
+            Catch InvalidCastException As Exception
+                Console.WriteLine("Input base should be an integer number")
+            End Try
 
-            Console.Write("Base of the result number system: ")
-            OutputBase = Console.ReadLine()
 
+            If SystemValidation(OutputBase) = False Then
+                Console.WriteLine("Number system is incorrect! Choose Number system from 2 to 36")
+            End If
+            Console.WriteLine()
+        Loop Until SystemValidation(OutputBase) = True
+
+        Do
             Console.Write("Number: ")
             InputNumber = Console.ReadLine()
             Console.WriteLine()
@@ -26,7 +49,15 @@ Module Program
 
         Console.ReadKey()
     End Sub
+    Function SystemValidation(Base As Integer) As Boolean
+
+        If Base < 2 Or Base > 36 Then
+            Return False
+        End If
+        Return True
+    End Function
     Function NumberValidation(InputNumber As String, InputBase As Integer) As Boolean
+
         Dim CharDict As String = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
         Replace(InputNumber, ",", "")
         For i = 0 To Len(InputNumber) - 1
@@ -37,12 +68,27 @@ Module Program
         Return True
     End Function
     Function Conversion(InputNumber As String, InputBase As Integer, OutputBase As Integer) As String
-        Dim CharDict As String = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-        Dim DecimalNumber As Double = NumberToDecimal(InputNumber, InputBase, CharDict)
 
-        Return NumberFromDecimal(DecimalNumber, OutputBase, CharDict)
+        Dim IsNegativ As Boolean
+
+        If InputNumber < 0 Then
+            IsNegativ = True
+            InputNumber = Replace(InputNumber, "-", "")
+        End If
+
+        Try
+            Dim CharDict As String = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+            Dim DecimalNumber As Double = NumberToDecimal(InputNumber, InputBase, CharDict)
+            If IsNegativ Then
+                Return "-" + NumberFromDecimal(DecimalNumber, OutputBase, CharDict)
+            End If
+            Return NumberFromDecimal(DecimalNumber, OutputBase, CharDict)
+        Catch OverflowException As Exception
+            Return "Input number is too big"
+        End Try
     End Function
     Function NumberToDecimal(InputNumber As String, InputBase As Integer, CharDict As String) As Double
+
         Dim DecimalNumber As Double
         Dim DecimalIntPart As Decimal
         Dim DecimalFractPart As Double
@@ -61,6 +107,7 @@ Module Program
         Return DecimalNumber
     End Function
     Function IntPartToDecimal(InputNumber As String, InputBase As Integer, CharDict As String) As Decimal
+
         Dim DecimalIntPart As Decimal = 0
         Dim IntPartReverse(Len(InputNumber) - 1) As Decimal
 
@@ -75,6 +122,7 @@ Module Program
         Return DecimalIntPart
     End Function
     Function FractParttoDecimal(InputNumber As String, InputBase As Integer, CharDict As String) As Double
+
         Dim DecimalFractPart As Double
         For i = 1 To Len(InputNumber)
             DecimalFractPart += Convert.ToSingle(Str(CharDict.IndexOf(InputNumber(i - 1)))) * (InputBase ^ -i)
@@ -83,6 +131,7 @@ Module Program
         Return DecimalFractPart
     End Function
     Function NumberFromDecimal(DecimalNumber As Double, OutputBase As Integer, CharDict As String) As String
+
         Dim OutputNumber As String
         Dim OtputIntPart As String
         Dim OutputFractPart As String
@@ -100,6 +149,7 @@ Module Program
         Return OutputNumber
     End Function
     Function IntPartFromDecimal(IntPartOfDecimal As Decimal, OutputBase As Integer, CharDict As String) As String
+
         Dim OutputIntPart As String = ""
 
         Do Until OutputBase > IntPartOfDecimal
@@ -113,6 +163,7 @@ Module Program
     End Function
 
     Function FractPartFromDecimal(FractPartOfDecimal As Double, OutputBase As Integer, CharDict As String) As String
+
         Dim OutputfractPart As String = ""
         Dim TempVar As Double = FractPartOfDecimal
 
