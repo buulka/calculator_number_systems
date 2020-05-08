@@ -13,7 +13,7 @@ Module Program
                                 "                                                                                           ",
                                 "  #######   ##   ##   ##    ##  #######     ##     #######  ########    ######    ######   ",
                                 "  ##        ##   ##   ##   ###  ##         #  #    ##   ##     ##       #    #    ##   ##  ",
-                                "  ##        ##   ##   ##  ####  ##        ##  ##   #3   ##     ##      ##    ##   ##    #  ",
+                                "  ##        ##   ##   ##  ####  ##        ##  ##   ##   ##     ##      ##    ##   ##    #  ",
                                 "  ##        ##   ##   ##  # ##  ##        #    #   ##   ##     ##      ##    ##   ##   ##  ",
                                 "  ##        #######   ## ## ##  ##       ##    ##  #######     ##      #      #   ######   ",
                                 "  ##             ##   ## #  ##  ##       ##    ##     ####     ##      ##    ##   ##       ",
@@ -22,8 +22,8 @@ Module Program
                                 "  #######        ##   ##    ##  #######  ##    ##  ##   ##     ##       ######    ##       ",
                                 "                                                                                           ",
                                 "  ######################################################################################## "}
-        Dim colours() = {ConsoleColor.Green, ConsoleColor.White, ConsoleColor.DarkGreen, ConsoleColor.Cyan}
-        Console.BackgroundColor = ConsoleColor.DarkBlue
+        Dim colours() = {ConsoleColor.Green, ConsoleColor.DarkYellow, ConsoleColor.DarkGreen, ConsoleColor.Yellow}
+        Console.BackgroundColor = ConsoleColor.Gray
         Console.Clear()
         Randomize()
         For i = 1 To 7
@@ -34,7 +34,7 @@ Module Program
                 If name(i)(j) = "#" Then
                     Console.BackgroundColor = colours(Int(3) * Rnd())
                 Else
-                    Console.BackgroundColor = ConsoleColor.DarkBlue
+                    Console.BackgroundColor = ConsoleColor.Gray
                 End If
                 Console.Write(" ")
                 pause(0.002)
@@ -44,21 +44,24 @@ Module Program
         Next
         Console.WriteLine()
         Console.ForegroundColor = ConsoleColor.DarkGray
-        Console.BackgroundColor = ConsoleColor.DarkBlue
-        Console.ForegroundColor = ConsoleColor.White
+        Console.BackgroundColor = ConsoleColor.Gray
+        Console.ForegroundColor = ConsoleColor.Black
         Console.WriteLine()
         Console.WriteLine()
-        Console.WriteLine("Нажмите любую клавишу для продолжения")
+        Console.WriteLine("Press any key to continue")
         Console.ReadKey()
     End Sub
 
     Sub Main()
-        Console.SetWindowSize(95, 40)
-        Console.SetBufferSize(95, 40)
-        Console.BackgroundColor = ConsoleColor.DarkBlue
-        Console.ForegroundColor = ConsoleColor.White
+        Console.SetWindowSize(95, 30)
+        Console.SetBufferSize(95, 30)
+        Console.BackgroundColor = ConsoleColor.Gray
+        Console.ForegroundColor = ConsoleColor.Black
         screensaver()
         Console.Clear()
+        Body()
+    End Sub
+    Sub Body()
         Dim InputNumber As String
         Dim InputBase As Single
         Dim OutputBase As Single
@@ -66,14 +69,20 @@ Module Program
         Do
             Try
                 Console.Write("Base of the original number system: ")
+                Console.ForegroundColor = ConsoleColor.DarkGreen
                 InputBase = Console.ReadLine()
+                Console.ForegroundColor = ConsoleColor.Black
+                Replace(InputBase, " ", "")
             Catch InvalidCastException As Exception
             End Try
 
             If SystemValidation(InputBase) = False Then
                 Console.WriteLine()
+                Console.ForegroundColor = ConsoleColor.DarkRed
                 Console.WriteLine("Input base should be an integer number")
-                Console.WriteLine("Choose Number system from 2 to 36, Input base should be an integer number!")
+                Console.WriteLine("Choose number system from 2 to 36. Input base should be an integer number!")
+                Console.ForegroundColor = ConsoleColor.Black
+
                 Console.WriteLine()
             End If
 
@@ -82,35 +91,101 @@ Module Program
         Do
             Try
                 Console.Write("Base of the result number system: ")
+                Console.ForegroundColor = ConsoleColor.DarkGreen
                 OutputBase = Console.ReadLine()
+                Console.ForegroundColor = ConsoleColor.Black
+                Replace(OutputBase, " ", "")
             Catch InvalidCastException As Exception
-                Console.WriteLine("Input base should be an integer number")
             End Try
 
 
             If SystemValidation(OutputBase) = False Then
-                Console.WriteLine("Number system is incorrect! Input base should be an integer number! Choose Number system from 2 to 36")
+                Console.WriteLine()
+                Console.ForegroundColor = ConsoleColor.DarkRed
+                Console.WriteLine("Input base should be an integer number")
+                Console.WriteLine("Choose number system from 2 to 36. Input base should be an integer number!")
+                Console.ForegroundColor = ConsoleColor.Black
             End If
             Console.WriteLine()
         Loop Until SystemValidation(OutputBase) = True
 
         Do
             Console.Write("Number: ")
+            Console.ForegroundColor = ConsoleColor.DarkGreen
             InputNumber = Console.ReadLine()
+            Console.ForegroundColor = ConsoleColor.Black
+            InputNumber = Replace(InputNumber, " ", "")
+            InputNumber = Replace(InputNumber, ".", ",")
+            InputNumber = UCase(InputNumber)
             Console.WriteLine()
-
             If NumberValidation(InputNumber, InputBase) = False Then
+                Console.ForegroundColor = ConsoleColor.Red
                 Console.WriteLine("Input number is in the wrong format!")
+                Console.ForegroundColor = ConsoleColor.Black
+                Console.WriteLine()
             End If
         Loop Until NumberValidation(InputNumber, InputBase) = True
 
         Convert.ToInt32(InputBase)
         Convert.ToInt32(OutputBase)
-        Console.WriteLine("Result: " & Conversion(InputNumber, InputBase, OutputBase))
 
-        Console.ReadKey()
+        Console.Clear()
+
+        Console.Write("Base of the original number system: ")
+        Console.ForegroundColor = ConsoleColor.DarkGreen
+        Console.WriteLine(InputBase)
+        Console.ForegroundColor = ConsoleColor.Black
+
+        Console.Write("Base of the result number system: ")
+        Console.ForegroundColor = ConsoleColor.DarkGreen
+        Console.WriteLine(OutputBase)
+        Console.ForegroundColor = ConsoleColor.Black
+
+        Console.Write("Number: ")
+        Console.ForegroundColor = ConsoleColor.DarkGreen
+        Console.WriteLine(InputNumber)
+        Console.ForegroundColor = ConsoleColor.Black
+
+        Console.WriteLine()
+
+
+        Console.Write("Result: ")
+        Console.ForegroundColor = ConsoleColor.DarkGreen
+        Console.WriteLine(Conversion(InputNumber, InputBase, OutputBase))
+        Console.ForegroundColor = ConsoleColor.Black
+
+        Console.WriteLine()
+        Console.WriteLine("Select option:")
+        Console.WriteLine("1 - new conversion")
+        Console.WriteLine("2 - EXIT")
+
+        Dim IsTrueAnswer As Boolean
+
+        Do
+            Console.Write("Your choice: ")
+            Console.ForegroundColor = ConsoleColor.DarkGreen
+            Dim UsersAnswer As String = Console.ReadLine()
+            Console.ForegroundColor = ConsoleColor.Black
+            If UsersAnswer = "1" Then
+                IsTrueAnswer = True
+                Console.Clear()
+                Body()
+            ElseIf UsersAnswer = "2" Then
+                IsTrueAnswer = True
+                Exit Sub
+
+            Else
+                IsTrueAnswer = False
+                Console.ForegroundColor = ConsoleColor.DarkRed
+                Console.WriteLine("There is no such answer option")
+                Console.ForegroundColor = ConsoleColor.Black
+                Console.WriteLine()
+            End If
+        Loop Until IsTrueAnswer = True
     End Sub
+
     Function SystemValidation(Base As Single) As Boolean
+
         If Base < 2 Or Base > 36 Or (Base - Fix(Base) > 0) Then
             Return False
         End If
@@ -119,9 +194,13 @@ Module Program
     Function NumberValidation(InputNumber As String, InputBase As Integer) As Boolean
 
         Dim CharDict As String = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-        Replace(InputNumber, ",", "")
+
+        If InputNumber = "" Then
+            Return False
+        End If
+        InputNumber = Replace(InputNumber, ",", "")
         For i = 0 To Len(InputNumber) - 1
-            If CharDict.IndexOf(InputNumber(i)) >= InputBase Then
+            If CharDict.IndexOf(InputNumber(i)) >= InputBase Or CharDict.IndexOf(InputNumber(i)) < 0 Then
                 Return False
             End If
         Next
@@ -131,7 +210,7 @@ Module Program
 
         Dim IsNegativ As Boolean
 
-        If InputNumber < 0 Then
+        If InputNumber(0) = "-" Then
             IsNegativ = True
             InputNumber = Replace(InputNumber, "-", "")
         End If
@@ -144,7 +223,9 @@ Module Program
             End If
             Return NumberFromDecimal(DecimalNumber, OutputBase, CharDict)
         Catch OverflowException As Exception
+            Console.ForegroundColor = ConsoleColor.DarkRed
             Return "Input number is too big"
+            Console.ForegroundColor = ConsoleColor.Black
         End Try
     End Function
     Function NumberToDecimal(InputNumber As String, InputBase As Integer, CharDict As String) As Double
